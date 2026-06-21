@@ -1,12 +1,7 @@
-// Calls Google's Gemini API directly via fetch — no SDK needed, keeps the dependency list small.
-// Gemini's generateContent endpoint accepts inline file data (base64) alongside text in the
-// same request, so the resume image and the job description go in as one multimodal prompt.
 
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
-// @route   POST /api/ai/resume-feedback
-// @access  Private
 const getResumeFeedback = async (req, res) => {
   try {
     const { fileData, mimeType, jobDescription } = req.body;
@@ -26,8 +21,6 @@ const getResumeFeedback = async (req, res) => {
         .json({ message: "AI feature is not configured on the server" });
     }
 
-    // The prompt instructs Gemini to return ONLY JSON, so we can parse it directly —
-    // no markdown fences, no preamble. This is the structured-output pattern.
     const prompt = `You are a resume reviewer. Compare the attached resume against this job description and respond with ONLY a JSON object (no markdown, no extra text) in exactly this shape:
 {
   "matchPercent": <number 0-100>,
@@ -51,7 +44,7 @@ ${jobDescription}`;
                 {
                   inline_data: {
                     mime_type: mimeType,
-                    data: fileData, // base64 string, no data: prefix
+                    data: fileData, 
                   },
                 },
               ],
@@ -76,7 +69,7 @@ ${jobDescription}`;
         .json({ message: "AI service returned an unexpected response" });
     }
 
-    // strip markdown code fences in case Gemini wraps the JSON despite instructions
+    
     const cleaned = rawText.replace(/```json|```/g, "").trim();
 
     let parsed;
