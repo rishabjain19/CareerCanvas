@@ -1,8 +1,8 @@
 # CareerCanvas
  <table>
   <tr>
-    <td><img width="100%" alt="CareerCanvas Login" src="https://github.com/user-attachments/assets/7a83e519-54cb-4b53-99d7-fceaef5bd7ac" /></td>
-    <td><img width="100%" alt="CareerCanvas Job Board" src="https://github.com/user-attachments/assets/51d4cdf6-8bf7-47a4-b77b-916be3b0a447" /></td>
+    <td><img width="100%" alt="CareerCanvas Login" src="https://github.com/user-attachments/assets/57787b02-29cc-481a-9465-b404bf804776" /></td>
+    <td><img width="100%" alt="CareerCanvas Job Board" src="https://github.com/user-attachments/assets/da91fd1e-bf8c-4015-8dca-f88777a11037" /></td>
   </tr>
 </table>
 
