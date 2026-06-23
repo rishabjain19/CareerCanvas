@@ -24,7 +24,6 @@ export default function JobModal({ job, onClose }) {
 
   const isEditing = !!job;
 
-  // pre-fill the form when editing an existing job
   useEffect(() => {
     if (job) {
       setFormData({
@@ -55,7 +54,6 @@ export default function JobModal({ job, onClose }) {
       }
       onClose();
     } catch (err) {
-      // error already captured in JobContext state; modal just stays open so user can retry
     } finally {
       setSaving(false);
     }
@@ -67,17 +65,15 @@ export default function JobModal({ job, onClose }) {
     onClose();
   };
 
-  // uses live formData, not the stale `job` prop — so the link appears as soon as the user
-  // sets status to Interview + picks a date, without needing to save and reopen first
   const calendarLink = generateGoogleCalendarLink(formData);
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="card-surface text-white rounded-lg shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
-        <h2 className="text-2xl font-semibold text-[var(--beige)] mb-2">
+    <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="modal-card">
+        <h2 className="modal-title">
           {isEditing ? "Edit Application" : "New Application"}
         </h2>
-        <div className="h-0.5 w-full mb-4 rounded bg-gradient-to-r from-[var(--teal)] via-[var(--navy)] to-[var(--beige)]/30"></div>
+        <hr className="modal-divider" />
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 gap-3">
@@ -91,7 +87,7 @@ export default function JobModal({ job, onClose }) {
             />
             <input
               name="role"
-              placeholder="Role"
+              placeholder="Role / Position"
               value={formData.role}
               onChange={handleChange}
               required
@@ -125,7 +121,7 @@ export default function JobModal({ job, onClose }) {
           />
 
           <div>
-            <label className="block text-xs small-muted mb-1">Status</label>
+            <label className="modal-field-label">Status</label>
             <select
               name="status"
               value={formData.status}
@@ -142,9 +138,7 @@ export default function JobModal({ job, onClose }) {
 
           {formData.status === "Interview" && (
             <div>
-              <label className="block text-xs small-muted mb-1">
-                Interview date & time
-              </label>
+              <label className="modal-field-label">Interview date &amp; time</label>
               <input
                 type="datetime-local"
                 name="interviewDate"
@@ -157,7 +151,7 @@ export default function JobModal({ job, onClose }) {
 
           <textarea
             name="notes"
-            placeholder="Notes"
+            placeholder="Notes…"
             value={formData.notes}
             onChange={handleChange}
             rows={4}
@@ -182,7 +176,7 @@ export default function JobModal({ job, onClose }) {
               <button
                 type="button"
                 onClick={handleDelete}
-                className="text-sm text-[var(--rejected)] hover:underline"
+                className="modal-delete-btn"
               >
                 Delete
               </button>
@@ -193,16 +187,16 @@ export default function JobModal({ job, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm small-muted hover:bg-[rgba(255,255,255,0.02)] rounded-md"
+                className="modal-cancel-btn"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-4 py-2 text-sm btn-primary disabled:opacity-50"
+                className="btn-primary disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Save"}
+                {saving ? "Saving…" : "Save"}
               </button>
             </div>
           </div>

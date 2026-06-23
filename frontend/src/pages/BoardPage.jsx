@@ -5,8 +5,6 @@ import KanbanBoard from "../components/KanbanBoard";
 import JobModal from "../components/JobModal";
 import StatsBar from "../components/StatsBar";
 
-// BoardPage is now the single main screen of the app — it absorbs what used to be
-// the separate Dashboard page (stats) since there's no longer a multi-page sidebar nav.
 export default function BoardPage() {
   const { jobs, fetchJobs, loading } = useJobs();
   const [selectedJob, setSelectedJob] = useState(null);
@@ -32,26 +30,30 @@ export default function BoardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] page-reveal">
+    <div className="board-page page-reveal">
       <Navbar />
-      <main className="p-6 max-w-[1200px] mx-auto">
-        <div className="flex items-center justify-between mb-6 page-reveal page-reveal--soft">
+      <main className="p-6 max-w-[1280px] mx-auto">
+        <div className="flex items-start justify-between mb-8 page-reveal page-reveal--soft">
           <div className="board-hero">
             <h2 className="large-title">Job Board</h2>
-            <p className="board-hero__copy">Move each application from applied to offer, and keep your profile close when a recruiter asks for more context.</p>
+            <p className="board-hero__copy">
+              Move each application from applied to offer, and keep your profile close when a recruiter asks for more context.
+            </p>
           </div>
-          <div>
+          <div className="mt-1">
             <button
+              id="add-application-btn"
               onClick={openNewJobModal}
               className="btn-primary"
             >
-              + Add Application
+              <span style={{ fontSize: "1.1rem", lineHeight: 1 }}>+</span>
+              Add Application
             </button>
           </div>
         </div>
 
         {loading ? (
-          <p className="small-muted">Loading...</p>
+          <p className="small-muted">Loading…</p>
         ) : (
           <>
             <div className="mb-6 page-reveal page-reveal--soft">

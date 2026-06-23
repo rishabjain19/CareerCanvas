@@ -4,9 +4,6 @@ import api from "../api/axios";
 const ACCEPTED_TYPES = ".jpg,.jpeg,.png,.pdf";
 const MAX_FILE_SIZE_MB = 10;
 
-// Lives inside JobModal as an optional collapsible section, rather than a separate page.
-// Resume is uploaded as a file (image or PDF) and sent to Gemini directly — Gemini reads
-// both formats natively, so no OCR/text-extraction step is needed on our end.
 export default function AIResumeFeedback() {
   const [open, setOpen] = useState(false);
   const [resumeFile, setResumeFile] = useState(null);
@@ -35,12 +32,10 @@ export default function AIResumeFeedback() {
     setResumeFile(file);
   };
 
-  // Converts the uploaded file to base64 — this is the format the backend forwards
-  // to the Gemini API as inline file data.
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]); // strip the data: prefix
+      reader.onload = () => resolve(reader.result.split(",")[1]);
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
@@ -66,38 +61,38 @@ export default function AIResumeFeedback() {
   };
 
   return (
-    <div className="border border-gray-200 rounded-md">
+    <div className="ai-feedback-panel">
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        className="ai-feedback-toggle"
       >
-        <span>🤖 Check your chances (optional)</span>
-        <span className="text-gray-400">{open ? "−" : "+"}</span>
+        <span>Check your selection chances</span>
+        <span style={{ color: "var(--taupe)", fontSize: "1.1rem", lineHeight: 1 }}>
+          {open ? "−" : "+"}
+        </span>
       </button>
 
       {open && (
-        <div className="p-3 border-t border-gray-200 space-y-2">
+        <div className="ai-feedback-body">
           <div>
-            <label className="block text-xs text-gray-500 mb-1">
-              Upload your resume
-            </label>
+            <label className="ai-feedback-label">Upload your resume</label>
             <input
               type="file"
               accept={ACCEPTED_TYPES}
               onChange={handleFileChange}
-              className="w-full text-sm text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+              className="ai-file-input"
             />
-            <p className="text-xs text-gray-400 mt-1">
-              Image or PDF file — max {MAX_FILE_SIZE_MB}MB
+            <p className="ai-feedback-hint">
+              Image or PDF — max {MAX_FILE_SIZE_MB}MB
             </p>
             {resumeFile && (
-              <p className="text-xs text-green-600 mt-1">
+              <p className="ai-feedback-success mt-1">
                 ✓ {resumeFile.name} selected
               </p>
             )}
             {fileError && (
-              <p className="text-xs text-red-600 mt-1">{fileError}</p>
+              <p className="ai-feedback-error-text mt-1">{fileError}</p>
             )}
           </div>
 
@@ -106,32 +101,30 @@ export default function AIResumeFeedback() {
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+            className="w-full input-soft text-sm"
           />
 
           <button
             type="button"
             onClick={handleAnalyze}
             disabled={loading || !resumeFile || !jobDescription}
-            className="w-full bg-gray-800 text-white text-sm py-2 rounded-md hover:bg-gray-900 disabled:opacity-50"
+            className="ai-analyze-btn"
           >
-            {loading ? "Checking..." : "Check your chances"}
+            {loading ? "Checking…" : "Check your chances"}
           </button>
 
           {feedback && (
-            <div className="text-sm bg-gray-50 p-3 rounded space-y-2">
+            <div className="ai-results">
               {feedback.matchPercent !== undefined && (
-                <p className="font-semibold text-gray-800">
+                <p className="ai-results__match">
                   Match:{" "}
-                  <span className="text-blue-600">
-                    {feedback.matchPercent}%
-                  </span>
+                  <span>{feedback.matchPercent}%</span>
                 </p>
               )}
               {feedback.missingSkills?.length > 0 && (
-                <div>
-                  <p className="font-medium text-gray-700">Missing skills:</p>
-                  <ul className="list-disc list-inside text-gray-600">
+                <div className="ai-results__section">
+                  <p>Missing skills:</p>
+                  <ul>
                     {feedback.missingSkills.map((skill, i) => (
                       <li key={i}>{skill}</li>
                     ))}
@@ -139,9 +132,9 @@ export default function AIResumeFeedback() {
                 </div>
               )}
               {feedback.suggestions?.length > 0 && (
-                <div>
-                  <p className="font-medium text-gray-700">Suggestions:</p>
-                  <ul className="list-disc list-inside text-gray-600">
+                <div className="ai-results__section">
+                  <p>Suggestions:</p>
+                  <ul>
                     {feedback.suggestions.map((tip, i) => (
                       <li key={i}>{tip}</li>
                     ))}

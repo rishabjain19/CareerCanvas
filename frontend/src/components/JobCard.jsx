@@ -1,4 +1,4 @@
-import { useDraggable } from '@dnd-kit/core';
+import { useDraggable } from "@dnd-kit/core";
 
 export default function JobCard({ job, onClick }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -19,13 +19,11 @@ export default function JobCard({ job, onClick }) {
       {...listeners}
       {...attributes}
       onClick={() => onClick(job)}
-      className={`card-surface card-hover cursor-grab active:cursor-grabbing mb-2 ${isDragging ? 'opacity-50' : ''}`}
+      className={`job-card ${isDragging ? "opacity-50 scale-105 shadow-xl" : ""}`}
     >
-      <div>
-        <p className="font-semibold text-sm text-white">{job.companyName}</p>
-        <p className="text-xs small-muted mt-0.5">{job.role}</p>
-        {job.salary && <p className="text-xs small-muted mt-1">{job.salary}</p>}
-      </div>
+      <p className="job-card__company">{job.companyName}</p>
+      <p className="job-card__role">{job.role}</p>
+      {job.salary && <p className="job-card__salary">{job.salary}</p>}
     </div>
   );
 }

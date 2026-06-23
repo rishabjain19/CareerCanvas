@@ -77,13 +77,15 @@ export default function RegisterPage() {
         <div className="register-brand">
           <div className="register-brand__mark">CC</div>
           <p>
-            CareerCanvas
+            Career<em>Canvas</em>
             <span>Register once, then manage every application in one place.</span>
           </p>
         </div>
 
         <h1 className="register-header">Create Account</h1>
-        <p className="register-subheader">Join and keep your career search organized in one place. You can update your profile, add jobs, and follow progress without losing the bigger picture.</p>
+        <p className="register-subheader">
+          Join and keep your career search organised in one place. Add jobs, track progress, and never lose the bigger picture.
+        </p>
 
         {error && (
           <div className="register-error" role="alert">
@@ -165,7 +167,7 @@ export default function RegisterPage() {
             disabled={loading}
             className="register-cta"
           >
-            <span>{loading ? "Creating account..." : "Register"}</span>
+            <span>{loading ? "Creating account…" : "Register"}</span>
             <span aria-hidden="true">→</span>
           </button>
         </form>

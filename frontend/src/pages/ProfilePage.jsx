@@ -10,10 +10,29 @@ const EMPTY_PROFILE = {
   interests: "",
   linkedin: "",
   github: "",
-  leetcode: "",
   tenthMarks: "",
   twelfthMarks: "",
 };
+
+function ProfileSection({ title, variant = "", children }) {
+  return (
+    <div className={`profile-section ${variant ? `profile-section--${variant}` : ""}`}>
+      <h3 className="profile-section__title">{title}</h3>
+      <div className="profile-section__grid">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ProfileField({ label, children }) {
+  return (
+    <div className="profile-field">
+      <label className="profile-field__label">{label}</label>
+      {children}
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const { user, updateProfile, loading, error } = useAuth();
@@ -21,7 +40,6 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState(EMPTY_PROFILE);
   const [saved, setSaved] = useState(false);
 
-  // pre-fill with whatever the user already has saved, falling back to empty strings
   useEffect(() => {
     if (user) {
       setFormData({
@@ -31,7 +49,6 @@ export default function ProfilePage() {
         interests: user.interests || "",
         linkedin: user.linkedin || "",
         github: user.github || "",
-        leetcode: user.leetcode || "",
         tenthMarks: user.tenthMarks || "",
         twelfthMarks: user.twelfthMarks || "",
       });
@@ -56,83 +73,141 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] page-reveal">
+    <div className="board-page page-reveal">
       <Navbar />
 
-      <main className="w-full p-8">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="card-surface p-8 page-reveal page-reveal--soft">
-            <div className="profile-hero">
-              <p className="profile-hero__eyebrow">Profile setup</p>
-              <h2 className="profile-hero__title">My Profile</h2>
-              <p className="profile-hero__copy">Optional, but useful. Fill it in when you want to personalize your experience and keep your career details ready for the board.</p>
+      <main className="profile-main">
+        <div className="profile-container">
+
+          <div className="profile-topbar">
+            <div>
+              <p className="profile-hero__eyebrow">Your profile</p>
+              <h1 className="profile-hero__title">My Profile</h1>
+              <p className="profile-hero__copy">
+                Keep your career details sharp and ready. Fill in what matters — update anytime.
+              </p>
             </div>
-
-            <div className="flex items-start justify-between mb-6">
-              <div />
-              <div>
-                <button onClick={() => navigate('/board')} className="btn-ghost text-sm">← Back to Job Board</button>
-              </div>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3 bg-[rgba(224,93,93,0.08)] text-[var(--rejected)] text-sm rounded">{error}</div>
-            )}
-            {saved && (
-              <div className="mb-4 p-3 bg-[rgba(86,124,141,0.08)] text-[var(--beige)] text-sm rounded">Profile saved.</div>
-            )}
-
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">College</label>
-                <input name="college" value={formData.college} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">Year</label>
-                <input name="collegeYear" placeholder="e.g. 3rd Year" value={formData.collegeYear} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">GPA</label>
-                <input name="gpa" type="number" step="0.01" min="0" max="10" value={formData.gpa} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">Interests</label>
-                <input name="interests" placeholder="e.g. Web Development, Machine Learning" value={formData.interests} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">LinkedIn</label>
-                <input name="linkedin" placeholder="https://linkedin.com/in/..." value={formData.linkedin} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">GitHub</label>
-                <input name="github" placeholder="https://github.com/..." value={formData.github} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="md:col-span-2 reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">LeetCode</label>
-                <input name="leetcode" placeholder="https://leetcode.com/..." value={formData.leetcode} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">10th Marks</label>
-                <input name="tenthMarks" required placeholder="e.g. 85%" value={formData.tenthMarks} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="reveal-step">
-                <label className="block text-sm font-medium small-muted mb-1">12th Marks</label>
-                <input name="twelfthMarks" required placeholder="e.g. 88%" value={formData.twelfthMarks} onChange={handleChange} className="w-full input-soft text-sm" />
-              </div>
-
-              <div className="md:col-span-2 flex justify-end mt-4 reveal-step">
-                <button type="submit" disabled={loading} className="btn-primary">{loading ? "Saving..." : "Save Profile"}</button>
-              </div>
-            </form>
+            <button
+              onClick={() => navigate("/board")}
+              className="btn-ghost profile-back-btn"
+            >
+              ← Job Board
+            </button>
           </div>
+
+          {error && (
+            <div className="profile-alert profile-alert--error">{error}</div>
+          )}
+          {saved && (
+            <div className="profile-alert profile-alert--success">
+              ✓ Profile saved successfully.
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="profile-form">
+
+            <ProfileSection title="Academic Background" variant="academic">
+              <ProfileField label="College / University">
+                <input
+                  name="college"
+                  value={formData.college}
+                  onChange={handleChange}
+                  placeholder="e.g. IIT Delhi"
+                  className="profile-input"
+                />
+              </ProfileField>
+
+              <ProfileField label="Current Year">
+                <input
+                  name="collegeYear"
+                  value={formData.collegeYear}
+                  onChange={handleChange}
+                  placeholder="e.g. 3rd Year"
+                  className="profile-input"
+                />
+              </ProfileField>
+
+              <ProfileField label="GPA / CGPA">
+                <input
+                  name="gpa"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="10"
+                  value={formData.gpa}
+                  onChange={handleChange}
+                  placeholder="e.g. 8.5"
+                  className="profile-input"
+                />
+              </ProfileField>
+
+              <ProfileField label="Interests">
+                <input
+                  name="interests"
+                  value={formData.interests}
+                  onChange={handleChange}
+                  placeholder="e.g. Web Development, Machine Learning"
+                  className="profile-input"
+                />
+              </ProfileField>
+            </ProfileSection>
+
+            <ProfileSection title="Academic Scores" variant="scores">
+              <ProfileField label="10th Marks">
+                <input
+                  name="tenthMarks"
+                  required
+                  value={formData.tenthMarks}
+                  onChange={handleChange}
+                  placeholder="e.g. 92%"
+                  className="profile-input"
+                />
+              </ProfileField>
+
+              <ProfileField label="12th Marks">
+                <input
+                  name="twelfthMarks"
+                  required
+                  value={formData.twelfthMarks}
+                  onChange={handleChange}
+                  placeholder="e.g. 88%"
+                  className="profile-input"
+                />
+              </ProfileField>
+            </ProfileSection>
+
+            <ProfileSection title="Online Profile" variant="online">
+              <ProfileField label="LinkedIn">
+                <input
+                  name="linkedin"
+                  value={formData.linkedin}
+                  onChange={handleChange}
+                  placeholder="https://linkedin.com/in/yourname"
+                  className="profile-input"
+                />
+              </ProfileField>
+
+              <ProfileField label="GitHub">
+                <input
+                  name="github"
+                  value={formData.github}
+                  onChange={handleChange}
+                  placeholder="https://github.com/yourname"
+                  className="profile-input"
+                />
+              </ProfileField>
+            </ProfileSection>
+
+            <div className="profile-form__footer">
+              <p className="profile-form__hint">
+                All fields are optional except 10th &amp; 12th Marks.
+              </p>
+              <button type="submit" disabled={loading} className="btn-primary profile-save-btn">
+                {loading ? "Saving…" : "Save Profile"}
+              </button>
+            </div>
+
+          </form>
         </div>
       </main>
     </div>

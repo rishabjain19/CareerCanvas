@@ -1,7 +1,5 @@
 import StatsCard from "./StatsCard";
 
-// Renamed conceptually from "Dashboard stats" to "StatsBar" since it now lives
-// inline at the top of the Job Board instead of on its own page.
 export default function StatsBar({ jobs }) {
   const stats = {
     total: jobs.length,

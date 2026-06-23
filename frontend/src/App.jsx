@@ -8,11 +8,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 export default function App() {
   return (
     <Routes>
-      {/* public routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* protected routes */}
       <Route
         path="/board"
         element={
@@ -30,7 +28,6 @@ export default function App() {
         }
       />
 
-      {/* Job Board is now the default landing page after login — Dashboard removed */}
       <Route path="/" element={<Navigate to="/board" replace />} />
       <Route path="*" element={<Navigate to="/board" replace />} />
     </Routes>
