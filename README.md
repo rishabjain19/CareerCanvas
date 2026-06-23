@@ -16,7 +16,7 @@ Live app: [CareerCanvas on Vercel](https://career-canvas-six.vercel.app)
 
 Backend API: [CareerCanvas API on Render](https://careercanvas-h3qy.onrender.com)
 
-🔒 **Note:** Your credentials are completely secure. Passwords are hashed using the `bcryptjs` library before being stored in the database, and are never visible to the developer.
+**Note:** Your credentials are completely secure. Passwords are hashed using the `bcryptjs` library before being stored in the database, and are never visible to the developer.
 
 ## Features
 
